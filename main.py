@@ -97,8 +97,7 @@ L3 = ttk.Label(root, text="What do you want to do?",font=("Helvetica",18,"bold")
 L3.place(x=310, y=170, anchor="center")
 s = ttk.Style()
 s.configure('my.TButton', font=('Helvetica', 13 ,"bold"))
-
-buttonPhoto = ImageTk.PhotoImage(Image.open(r"C:\Programming\Python_Projects\Image_processing_projects\Pose_estimation\program7__b.jpg"))
+# buttonPhoto = ImageTk.PhotoImage(Image.open(r"C:\Programming\Python_Projects\Image_processing_projects\Pose_estimation\program7__b.jpg"))
 
 # MyButton1 = Button(root, text="Warm UP", image = buttonPhoto , command=exercise_callback , borderwidth=0 )
 MyButton1 = ttk.Button(root, text="Warm UP", command=exercise_callback)
