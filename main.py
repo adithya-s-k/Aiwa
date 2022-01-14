@@ -6,110 +6,201 @@ import tkinter.font as font
 import time
 from PIL import Image, ImageTk
 
+
+
 root = tk.Tk(className='Main MENU')
 root.geometry("620x1000")
 root.minsize(620,1000)
 root.maxsize(620,1000)
 
-def exercise_callback():
-    diff = tk.Tk(className='Input difficulty')
-    diff.geometry("620x1000")
-    diff.minsize(620,1000)
-    diff.maxsize(620,1000)
+introFrame = tk.Frame(root, bg= "#F5F7FD" )
+introFrame.place(height=1000, width=630, x=0, y=0)
 
-    def easy():
-        entry1 = 5
-        diff.destroy()
-        difficulty = entry1  
-        print(difficulty)
-        curl_counter(difficulty)
-        time.sleep(5)
-        running_counter(difficulty)
-        time.sleep(5)
-        squat_counter(1)
-        cap.release()
-    
-    def moderate():
-        entry1 = 10
-        diff.destroy()
-        difficulty = entry1  
-        print(difficulty)
-        curl_counter(difficulty)
-        time.sleep(5)
-        running_counter(difficulty)
-        time.sleep(5)
-        squat_counter(difficulty)
+homeFrame = tk.Frame(root, bg= "#F5F7FD" )
+homeFrame.place(height=1000, width=630, x=1000, y=0)
 
-        cap.release()
-    def hard():
-        entry1 = 15
-        diff.destroy()
-        difficulty = entry1  
-        print(difficulty)
-        curl_counter(difficulty)
-        time.sleep(5)
-        running_counter(difficulty)
-        time.sleep(5)
-        squat_counter(difficulty)
-        time.sleep(5)
-        push_up_counter(difficulty)
-        cap.release()
+workoutFrame = tk.Frame(root, bg= "#F5F7FD" )
+workoutFrame.place(height=1000, width=630, x=1000, y=0)
 
-    L1 = ttk.Label(diff, text="AIWA",font=("Helvetica",36,"bold"))
-    L1.place(x=310, y=30, anchor="center")
+difficultyFrame = tk.Frame(root, bg= "#F5F7FD" )
+difficultyFrame.place(height=1000, width=630, x=1000, y=0)
 
-    L2 = ttk.Label(diff, text="Your Personalized AI workout Assistant",font=("Helvetica",16,"bold"))
-    L2.place(x=310, y=70, anchor="center")
 
-    L3 = ttk.Label(diff, text="Choose A Difficulty Level",font=("Helvetica",18,"bold"))
-    L3.place(x=310, y=170, anchor="center")
-    # E1 = tk.Entry(diff, bd = 5)
-    # E1.grid(row=0, column=1)
 
-    MyButton1 = ttk.Button(diff, text="EASY", command= easy)
-    MyButton1.grid(row=4, column=4)
-    MyButton1.place(bordermode=OUTSIDE, height=200, width=300,x=160,y=200)
+def introFrameOpen():
+    introFrame.place(x=0,y=0) 
+    homeFrame.place(x=-630,y=0)
+    workoutFrame.place(x=-630,y=0)
+    difficultyFrame.place(x=-630,y=0)
 
-    MyButton2 = ttk.Button(diff, text="MODERATE",command= moderate)
-    MyButton2.grid(row=4, column=4)
-    MyButton2.place(bordermode=OUTSIDE, height=200, width=300,x=160,y=450)
+def homeFrameOpen():
+    homeFrame.place(x=0,y=0)
+    introFrame.place(x=-630,y=0)
+    workoutFrame.place(x=-630,y=0)
+    difficultyFrame.place(x=-630,y=0)
 
-    MyButton3 = ttk.Button(diff, text="HARD", command=hard)
-    MyButton3.grid(row=4, column=4)
-    MyButton3.place(bordermode=OUTSIDE, height=200, width=300,x=160,y=700)
-    
+def workoutFrameOpen():
+    workoutFrame.place(x=0,y=0)
+    homeFrame.place(x=-630,y=0)
+    introFrame.place(x=-630,y=0)
+    difficultyFrame.place(x=-630,y=0)
 
-    diff.mainloop()
+def difficultyFrameOpen():
+    difficultyFrame.place(x=0,y=0)
+    workoutFrame.place(x=-630,y=0)
+    homeFrame.place(x=-630,y=0)
+    introFrame.place(x=-630,y=0)
+
+def easy():
+    entry1 = 5
+    difficulty = entry1  
+    print(difficulty)
+    curl_counter(difficulty)
+    time.sleep(5)
+    running_counter(difficulty)
+    time.sleep(5)
+    squat_counter(1)
+    cap.release()
+    homeFrameOpen()
+
+def moderate():
+    entry1 = 10
+    difficulty = entry1  
+    print(difficulty)
+    curl_counter(difficulty)
+    time.sleep(5)
+    running_counter(difficulty)
+    time.sleep(5)
+    squat_counter(difficulty)
+    cap.release()
+    homeFrameOpen()
+
+def hard():
+    entry1 = 15
+    difficulty = entry1  
+    curl_counter(difficulty)
+    time.sleep(5)
+    running_counter(difficulty)
+    time.sleep(5)
+    squat_counter(difficulty)
+    time.sleep(5)
+    push_up_counter(difficulty)
+    cap.release()
+    homeFrameOpen()
 
 def posture_detector_callback():
     posture_detector()
+    cap.release()
+    homeFrameOpen()
 
 def counter_time_callback():
     curl_counter(2)
+    homeFrameOpen()
 
-L1 = ttk.Label(root, text="AIWA",font=("Helvetica",36,"bold"))
-L1.place(x=310, y=30, anchor="center")
 
-L2 = ttk.Label(root, text="Your Personalized AI workout Assistant",font=("Helvetica",16,"bold"))
-L2.place(x=310, y=70, anchor="center")
+#######################################
+# Sign in frame
 
-L3 = ttk.Label(root, text="What do you want to do?",font=("Helvetica",18,"bold"))
-L3.place(x=310, y=170, anchor="center")
-s = ttk.Style()
-s.configure('my.TButton', font=('Helvetica', 13 ,"bold"))
-# buttonPhoto = ImageTk.PhotoImage(Image.open(r"C:\Programming\Python_Projects\Image_processing_projects\Pose_estimation\program7__b.jpg"))
+landingImage = (Image.open("C:\Programming\Aiwa\Assets\image 1.png"))
+landingImage = landingImage.resize((620,813), Image.ANTIALIAS)
+landingImage = ImageTk.PhotoImage(landingImage)
+label = Label(introFrame, image = landingImage)
+label.place(x=int(0), y=(0))
 
-# MyButton1 = Button(root, text="Warm UP", image = buttonPhoto , command=exercise_callback , borderwidth=0 )
-MyButton1 = ttk.Button(root, text="Warm UP", command=exercise_callback)
-MyButton1.grid(row=4, column=4)
-MyButton1.place(bordermode=OUTSIDE, height=200, width=300,x=160,y=200)
+signupImage = Image.open("C:\Programming\Aiwa\Assets\image 3.png")
+signupImage = signupImage.resize((339,114), Image.ANTIALIAS)
+signupImage = ImageTk.PhotoImage(signupImage)
+startButton = Button(introFrame,image = signupImage ,bg='#F5F7FD',command = homeFrameOpen ,borderwidth = 0)
+startButton.place(x=141.15, y=707)
 
-MyButton2 = ttk.Button(root, text="Sitting Posture Detection", command= posture_detector_callback)
-MyButton2.grid(row=4, column=4)
-MyButton2.place(bordermode=OUTSIDE, height=200, width=300,x=160,y=450)
+startimage = Image.open("C:\Programming\Aiwa\Assets\image 4.png")
+startimage = startimage.resize((339,114), Image.ANTIALIAS)
+startimage = ImageTk.PhotoImage(startimage)
+startButton = Button(introFrame,image = startimage ,bg='#F5F7FD',command = homeFrameOpen ,borderwidth = 0)
+startButton.place(x=140 ,y=827)
 
-MyButton3 = ttk.Button(root, text="Run and Jump", command=counter_time_callback)
-MyButton3.grid(row=4, column=4)
-MyButton3.place(bordermode=OUTSIDE, height=200, width=300,x=160,y=700)
+
+################################################################################
+#home Frame
+
+topimage = (Image.open("C:\Programming\Aiwa\Assets\page1_1.png"))
+topimage = topimage.resize((620,222), Image.ANTIALIAS)
+topimage = ImageTk.PhotoImage(topimage)
+label = Label(homeFrame, image = topimage,borderwidth = 0)
+label.place(x=0, y=0)
+
+buttonHome1 = Image.open("C:\Programming\Aiwa\Assets\page1_2.png")
+buttonHome1 = buttonHome1.resize((525,191), Image.ANTIALIAS)
+buttonHome1 = ImageTk.PhotoImage(buttonHome1)
+startButton = Button(homeFrame,image = buttonHome1 ,command = workoutFrameOpen ,borderwidth = 0)
+startButton.place(x=47 ,y=259)
+
+buttonHome2 = Image.open("C:\Programming\Aiwa\Assets\page1_3.png")
+buttonHome2 = buttonHome2.resize((525,191), Image.ANTIALIAS)
+buttonHome2 = ImageTk.PhotoImage(buttonHome2)
+startButton = Button(homeFrame,image = buttonHome2 ,command = posture_detector_callback ,borderwidth = 0)
+startButton.place(x=47 ,y=487)
+
+buttonHome3 = Image.open("C:\Programming\Aiwa\Assets\page1_4.png")
+buttonHome3 = buttonHome3.resize((525,191), Image.ANTIALIAS)
+buttonHome3 = ImageTk.PhotoImage(buttonHome3)
+startButton = Button(homeFrame,image = buttonHome3 ,command = workoutFrameOpen ,borderwidth = 0)
+startButton.place(x=47 ,y=715)
+
+################################################################################
+#workout Frame
+
+topimage1 = (Image.open("C:\Programming\Aiwa\Assets\page2_1.png"))
+topimage1 = topimage1.resize((620,222), Image.ANTIALIAS)
+topimage1 = ImageTk.PhotoImage(topimage1)
+label = Label(workoutFrame, image = topimage,borderwidth = 0)
+label.place(x=0, y=0)
+
+buttonWorkout1 = Image.open("C:\Programming\Aiwa\Assets\page2_2.png")
+buttonWorkout1 = buttonWorkout1.resize((525,191), Image.ANTIALIAS)
+buttonWorkout1 = ImageTk.PhotoImage(buttonWorkout1)
+startButton = Button(workoutFrame,image = buttonWorkout1 ,command = difficultyFrameOpen ,borderwidth = 0)
+startButton.place(x=47 ,y=259)
+
+buttonWorkout2 = Image.open("C:\Programming\Aiwa\Assets\page2_3.png")
+buttonWorkout2 = buttonWorkout2.resize((525,191), Image.ANTIALIAS)
+buttonWorkout2 = ImageTk.PhotoImage(buttonWorkout2)
+startButton = Button(workoutFrame,image = buttonWorkout2 ,command = difficultyFrameOpen ,borderwidth = 0)
+startButton.place(x=47 ,y=487)
+
+buttonWorkout3 = Image.open("C:\Programming\Aiwa\Assets\page2_4.png")
+buttonWorkout3 = buttonWorkout3.resize((525,191), Image.ANTIALIAS)
+buttonWorkout3 = ImageTk.PhotoImage(buttonWorkout3)
+startButton = Button(workoutFrame,image = buttonWorkout3 ,command = difficultyFrameOpen ,borderwidth = 0)
+startButton.place(x=47 ,y=715)
+
+
+################################################################################
+#difficulty Frame
+
+topimage2 = (Image.open("C:\Programming\Aiwa\Assets\page3_1.png"))
+topimage2 = topimage2.resize((620,222), Image.ANTIALIAS)
+topimage2 = ImageTk.PhotoImage(topimage2)
+label = Label(difficultyFrame, image = topimage,borderwidth = 0)
+label.place(x=0, y=0)
+
+buttonDifficulty1 = Image.open("C:\Programming\Aiwa\Assets\page3_2.png")
+buttonDifficulty1 = buttonDifficulty1.resize((525,191), Image.ANTIALIAS)
+buttonDifficulty1 = ImageTk.PhotoImage(buttonDifficulty1)
+startButton = Button(difficultyFrame,image = buttonDifficulty1 ,command = easy ,borderwidth = 0)
+startButton.place(x=47 ,y=259)
+
+buttonDifficulty2 = Image.open("C:\Programming\Aiwa\Assets\page3_3.png")
+buttonDifficulty2 = buttonDifficulty2.resize((525,191), Image.ANTIALIAS)
+buttonDifficulty2 = ImageTk.PhotoImage(buttonDifficulty2)
+startButton = Button(difficultyFrame,image = buttonDifficulty2 ,command = moderate ,borderwidth = 0)
+startButton.place(x=47 ,y=487)
+
+buttonDifficulty3 = Image.open("C:\Programming\Aiwa\Assets\page3_4.png")
+buttonDifficulty3 = buttonDifficulty3.resize((525,191), Image.ANTIALIAS)
+buttonDifficulty3 = ImageTk.PhotoImage(buttonDifficulty3)
+startButton = Button(difficultyFrame,image = buttonDifficulty3 ,command = hard ,borderwidth = 0)
+startButton.place(x=47 ,y=715)
+
 
 root.mainloop()

@@ -14,9 +14,6 @@ from PIL import Image, ImageTk
     label = Label(introFrame, image = img)
     label.place(x=int(0), y=(0))'''
 
-def lol():
-    print("Hello")
-
 root = tk.Tk(className='Main MENU')
 root.geometry("620x1000")
 root.minsize(620,1000)
