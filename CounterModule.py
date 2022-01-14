@@ -20,7 +20,6 @@ def calculate_angle(a,b,c):#shoulder, elbow, wrist
     if angle >180.0:
         angle = 360-angle    
     return angle
-    
 def calculate_distance(a,b):
     a = np.array(a)
     b = np.array(b)
