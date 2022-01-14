@@ -100,15 +100,15 @@ s.configure('my.TButton', font=('Helvetica', 13 ,"bold"))
 # buttonPhoto = ImageTk.PhotoImage(Image.open(r"C:\Programming\Python_Projects\Image_processing_projects\Pose_estimation\program7__b.jpg"))
 
 # MyButton1 = Button(root, text="Warm UP", image = buttonPhoto , command=exercise_callback , borderwidth=0 )
-MyButton1 = Button(root, text="Warm UP", command=exercise_callback)
+MyButton1 = ttk.Button(root, text="Warm UP", command=exercise_callback)
 MyButton1.grid(row=4, column=4)
 MyButton1.place(bordermode=OUTSIDE, height=200, width=300,x=160,y=200)
 
-MyButton2 = Button(root, text="Sitting Posture Detection", command= posture_detector_callback)
+MyButton2 = ttk.Button(root, text="Sitting Posture Detection", command= posture_detector_callback)
 MyButton2.grid(row=4, column=4)
 MyButton2.place(bordermode=OUTSIDE, height=200, width=300,x=160,y=450)
 
-MyButton3 = Button(root, text="Run and Jump", command=counter_time_callback)
+MyButton3 = ttk.Button(root, text="Run and Jump", command=counter_time_callback)
 MyButton3.grid(row=4, column=4)
 MyButton3.place(bordermode=OUTSIDE, height=200, width=300,x=160,y=700)
 
