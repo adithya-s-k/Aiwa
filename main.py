@@ -54,7 +54,6 @@ def difficultyFrameOpen():
 def easy():
     entry1 = 5
     difficulty = entry1  
-    print(difficulty)
     curl_counter(difficulty)
     time.sleep(5)
     running_counter(difficulty)
@@ -66,7 +65,6 @@ def easy():
 def moderate():
     entry1 = 10
     difficulty = entry1  
-    print(difficulty)
     curl_counter(difficulty)
     time.sleep(5)
     running_counter(difficulty)
