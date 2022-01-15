@@ -94,7 +94,7 @@ def curl_counter(goal_curls):
                 pass
             
             cv2.rectangle(image, (440,0), (840,60), (0,0,0), -1)
-            cv2.putText(image, 'BISEP CURLS', (460,25), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(image, 'BISEP CURLS', (460,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
 
             # Render curl counter for right hand
             # Setup status box for right hand
@@ -145,6 +145,7 @@ def curl_counter(goal_curls):
                 break
 
     cv2.destroyAllWindows() 
+
 def push_up_counter(goal_push):
     inputGoal = goal_push
     #initializing variables to count repetitions
@@ -208,6 +209,8 @@ def push_up_counter(goal_push):
 
             except:
                 pass
+            cv2.rectangle(image, (440,0), (840,60), (0,0,0), -1)
+            cv2.putText(image, 'PUSH UPS', (460,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
             # Render pushup counter for right hand
             # Setup status box for right hand
             cv2.rectangle(image, (0,0), (70,80), (0,0,0), -1)
@@ -252,13 +255,14 @@ def push_up_counter(goal_push):
                                     mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
                                     mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
                                     )               
-            cv2.imshow('Mediapipe Feed', image)
+            cv2.imshow('PUSH UP COUNTER', image)
             if int(counter_l) >= int(inputGoal) and int(counter_r) >= int(inputGoal):
                 time.sleep(5)
                 break
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
     cv2.destroyAllWindows()
+
 def squat_counter(goal_squat):
     inputGoal = goal_squat
     counter = 0 
@@ -320,6 +324,8 @@ def squat_counter(goal_squat):
                     print("Right : ",counter_r)                            
             except:
                 pass
+            cv2.rectangle(image, (440,0), (860,60), (0,0,0), -1)
+            cv2.putText(image, 'SIT UPS/SQUATS', (460,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
             # Render pushup counter for right hand
             # Setup status box for right hand
             cv2.rectangle(image, (0,0), (70,80), (0,0,0), -1)
@@ -356,7 +362,7 @@ def squat_counter(goal_squat):
             elif counter_r > counter:
                 cv2.putText(image, 'Do Right arm next', (750,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
 
-            cv2.imshow('Mediapipe Feed', image)
+            cv2.imshow('SQUATS', image)
 
             if int(counter) >= int(inputGoal) and int(counter_r) >= int(inputGoal):
                 print("GOOD JOB")
@@ -367,6 +373,7 @@ def squat_counter(goal_squat):
                 break
     cv2.destroyAllWindows()
     return ["Squat Done",counter,counter_r]
+
 def running_counter(goal_running):
     inputGoal = goal_running
     # Curl counter variables
@@ -421,7 +428,8 @@ def running_counter(goal_running):
             
             except:
                 pass
-            
+            cv2.rectangle(image, (440,0), (840,60), (0,0,0), -1)
+            cv2.putText(image, 'RUNNING', (460,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
             # Render curl counter for right hand
             # Setup status box for right hand
             cv2.rectangle(image, (0,0), (70,80), (0,0,0), -1)

@@ -23,6 +23,94 @@ workoutFrame.place(height=1000, width=630, x=1000, y=0)
 difficultyFrame = tk.Frame(root, bg= "#F5F7FD" )
 difficultyFrame.place(height=1000, width=630, x=1000, y=0)
 
+takeRestFrame1 = tk.Frame(root, bg= "#F5F7FD" )
+takeRestFrame1.place(height=1000, width=630, x=0, y=1500)
+
+takeRestFrame2 = tk.Frame(root, bg= "#F5F7FD" )
+takeRestFrame2.place(height=1000, width=630, x=0, y=1500)
+
+takeRestFrame3 = tk.Frame(root, bg= "#F5F7FD" )
+takeRestFrame3.place(height=1000, width=630, x=0, y=1500)
+
+takeRestFrame4 = tk.Frame(root, bg= "#F5F7FD" )
+takeRestFrame4.place(height=1000, width=630, x=0, y=1500)
+
+takeRestFrame5 = tk.Frame(root, bg= "#F5F7FD" )
+takeRestFrame5.place(height=1000, width=630, x=0, y=1500)
+
+def takerest5():
+    introFrame.place(x=-630,y=0) 
+    homeFrame.place(x=-630,y=0)
+    workoutFrame.place(x=-630,y=0)
+    difficultyFrame.place(x=-630,y=0)
+
+    # takeRestFrame1.place(x=0,y=0)
+    # takeRestFrame2.place(x=0,y=0)
+    # takeRestFrame3.place(x=0,y=0)
+    # takeRestFrame4.place(x=0,y=0)
+    # takeRestFrame5.place(x=0,y=0)
+    # root.after(1000,takeRestFrame5.place(x=0,y=1500))
+    # root.after(1000,takeRestFrame4.place(x=0,y=1500))
+    # root.after(1000,takeRestFrame3.place(x=0,y=1500))
+    # root.after(1000,takeRestFrame2.place(x=0,y=1500))
+    # # root.after(1000,takeRestFrame1.place(x=0,y=1500))
+
+def second5():
+    introFrame.place(x=-630,y=0) 
+    homeFrame.place(x=-630,y=0)
+    workoutFrame.place(x=-630,y=0)
+    difficultyFrame.place(x=-630,y=0)
+    takeRestFrame1.place(x=0,y=1500)
+    takeRestFrame2.place(x=0,y=1500)
+    takeRestFrame3.place(x=0,y=1500)
+    takeRestFrame4.place(x=0,y=1500)
+    takeRestFrame5.place(x=0,y=0)
+
+def second4():
+    introFrame.place(x=-630,y=0) 
+    homeFrame.place(x=-630,y=0)
+    workoutFrame.place(x=-630,y=0)
+    difficultyFrame.place(x=-630,y=0)
+    takeRestFrame1.place(x=0,y=1500)
+    takeRestFrame2.place(x=0,y=1500)
+    takeRestFrame3.place(x=0,y=1500)
+    takeRestFrame4.place(x=0,y=0)
+    takeRestFrame5.place(x=0,y=1500)
+
+def second3():
+    introFrame.place(x=-630,y=0) 
+    homeFrame.place(x=-630,y=0)
+    workoutFrame.place(x=-630,y=0)
+    difficultyFrame.place(x=-630,y=0)
+    takeRestFrame1.place(x=0,y=1500)
+    takeRestFrame2.place(x=0,y=1500)
+    takeRestFrame3.place(x=0,y=0)
+    takeRestFrame4.place(x=0,y=1500)
+    takeRestFrame5.place(x=0,y=1500)
+
+def second2():
+    introFrame.place(x=-630,y=0) 
+    homeFrame.place(x=-630,y=0)
+    workoutFrame.place(x=-630,y=0)
+    difficultyFrame.place(x=-630,y=0)
+    takeRestFrame1.place(x=0,y=1500)
+    takeRestFrame2.place(x=0,y=0)
+    takeRestFrame3.place(x=0,y=1500)
+    takeRestFrame4.place(x=0,y=1500)
+    takeRestFrame5.place(x=0,y=1500)
+
+def second1():
+    introFrame.place(x=-630,y=0) 
+    homeFrame.place(x=-630,y=0)
+    workoutFrame.place(x=-630,y=0)
+    difficultyFrame.place(x=-630,y=0)
+    takeRestFrame1.place(x=0,y=0)
+    takeRestFrame2.place(x=0,y=1500)
+    takeRestFrame3.place(x=0,y=1500)
+    takeRestFrame4.place(x=0,y=1500)
+    takeRestFrame5.place(x=0,y=1500)
+
+
 def introFrameOpen():
     introFrame.place(x=0,y=0) 
     homeFrame.place(x=-630,y=0)
@@ -47,11 +135,17 @@ def difficultyFrameOpen():
     homeFrame.place(x=-630,y=0)
     introFrame.place(x=-630,y=0)
 
+def takerestFrameOpen():
+    difficultyFrame.place(x=-630,y=0)
+    workoutFrame.place(x=-630,y=0)
+    homeFrame.place(x=-630,y=0)
+    introFrame.place(x=-630,y=0)
+    takeRestFrame1.place(x=0,y=0)
+
 def easy():
     entry1 = 5
-    difficulty = entry1  
+    difficulty = entry1
     curl_counter(difficulty)
-    time.sleep(5)
     running_counter(difficulty)
     time.sleep(5)
     squat_counter(1)
@@ -86,7 +180,6 @@ def posture_detector_callback():
 def counter_time_callback():
     curl_counter(2)
     homeFrameOpen()
-
 
 #######################################
 # Sign in frame
@@ -134,7 +227,7 @@ startButton.place(x=47 ,y=487)
 buttonHome3 = Image.open("C:\Programming\Aiwa\Assets\page1_4.png")
 buttonHome3 = buttonHome3.resize((525,191), Image.ANTIALIAS)
 buttonHome3 = ImageTk.PhotoImage(buttonHome3)
-startButton = Button(homeFrame,image = buttonHome3 ,command = workoutFrameOpen ,borderwidth = 0)
+startButton = Button(homeFrame,image = buttonHome3 ,command = takerest5 ,borderwidth = 0)
 startButton.place(x=47 ,y=715)
 
 ################################################################################
@@ -183,7 +276,7 @@ startButton.place(x=47 ,y=259)
 buttonDifficulty2 = Image.open("C:\Programming\Aiwa\Assets\page3_3.png")
 buttonDifficulty2 = buttonDifficulty2.resize((525,191), Image.ANTIALIAS)
 buttonDifficulty2 = ImageTk.PhotoImage(buttonDifficulty2)
-startButton = Button(difficultyFrame,image = buttonDifficulty2 ,command = moderate ,borderwidth = 0)
+startButton = Button(difficultyFrame,image = buttonDifficulty2 ,command = takerest5 ,borderwidth = 0)
 startButton.place(x=47 ,y=487)
 
 buttonDifficulty3 = Image.open("C:\Programming\Aiwa\Assets\page3_4.png")
@@ -192,5 +285,37 @@ buttonDifficulty3 = ImageTk.PhotoImage(buttonDifficulty3)
 startButton = Button(difficultyFrame,image = buttonDifficulty3 ,command = hard ,borderwidth = 0)
 startButton.place(x=47 ,y=715)
 
+################################################################
+#Take rest frame
+
+takeRestimage1 = (Image.open("C:\Programming\Aiwa\Assets\image 29.png"))
+takeRestimage1 = takeRestimage1.resize((620,1000), Image.ANTIALIAS)
+takeRestimage1 = ImageTk.PhotoImage(takeRestimage1)
+label1 = Label(takeRestFrame1, image = takeRestimage1 , borderwidth = 0)
+label1.place(x=0, y=0)
+
+takeRestimage2 = (Image.open("C:\Programming\Aiwa\Assets\image 28.png"))
+takeRestimage2 = takeRestimage2.resize((620,1000), Image.ANTIALIAS)
+takeRestimage2 = ImageTk.PhotoImage(takeRestimage2)
+label2 = Label(takeRestFrame2, image = takeRestimage2 , borderwidth = 0)
+label2.place(x=0, y=0)
+
+takeRestimage3 = (Image.open("C:\Programming\Aiwa\Assets\image 27.png"))
+takeRestimage3 = takeRestimage3.resize((620,1000), Image.ANTIALIAS)
+takeRestimage3 = ImageTk.PhotoImage(takeRestimage3)
+label3 = Label(takeRestFrame3, image = takeRestimage3 , borderwidth = 0)
+label3.place(x=0, y=0)
+
+takeRestimage4 = (Image.open("C:\Programming\Aiwa\Assets\image 26.png"))
+takeRestimage4 = takeRestimage4.resize((620,1000), Image.ANTIALIAS)
+takeRestimage4 = ImageTk.PhotoImage(takeRestimage4)
+label4 = Label(takeRestFrame4, image = takeRestimage4 , borderwidth = 0)
+label4.place(x=0, y=0)
+
+takeRestimage5 = (Image.open("C:\Programming\Aiwa\Assets\image 25.png"))
+takeRestimage5 = takeRestimage5.resize((620,1000), Image.ANTIALIAS)
+takeRestimage5 = ImageTk.PhotoImage(takeRestimage5)
+label5 = Label(takeRestFrame5, image = takeRestimage5 , borderwidth = 0)
+label5.place(x=0, y=0)
 
 root.mainloop()
