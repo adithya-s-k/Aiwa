@@ -598,3 +598,64 @@ def toeTouch_counter(goal_touches):
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
     cv2.destroyAllWindows()
+
+def crunches_counter(goal_crunches):
+    inputGoal = goal_crunches
+    #initializing variables to count repetitions
+    counter_r=0
+    stage_r=None  
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:            
+        while cap.isOpened():
+            ret, frame = cap.read()
+            # Recolor image to RGB
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) #converting BGR to RGB so that it becomes easier for library to read the image
+            image.flags.writeable = False #this step is done to save some memoery
+            # Make detection
+            results = pose.process(image) #We are using the pose estimation model 
+            # Recolor back to BGR
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            # Extract landmarks
+            try:
+                landmarks = results.pose_landmarks.landmar
+                # Get coordinates of right hand
+                shoulder_r = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+                foot_r = [landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].y]
+                hip_r = [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y]
+
+                back_angle_r = calculate_angle(shoulder_r,hip_r,foot_r)
+                # Curl counter logic for right
+
+                if back_angle_r <= 70: 
+                    stage_r = "Down"
+                if back_angle_r > 70 and back_angle_r <= 180 and stage_r =='Down':
+                    stage_r="Up"
+                    counter_r +=1
+                    print("Right : ",counter_r)  
+
+            except:
+                pass
+            cv2.rectangle(image, (440,0), (840,60), (0,0,0), -1)
+            cv2.putText(image, 'CRUNCHES', (460,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+            # Render pushup counter for right hand
+            # Setup status box for right hand
+            cv2.rectangle(image, (0,0), (70,80), (0,0,0), -1)
+            # cv2.rectangle(image, (0,35), (220,80), (245,117,16), -1)
+            cv2.rectangle(image, (75,0), (220,80), (0,0,0), -1)
+            # Rep data
+            cv2.putText(image, 'REPS', (5,25), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(image, str(counter_r), (10,65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+            # Stage data
+            cv2.putText(image, 'STAGE', (80,25), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(image, stage_r, (80,65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+            
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    )               
+            cv2.imshow('Crunches', image)
+            if int(counter_r) >= int(inputGoal):
+                break
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
+    cv2.destroyAllWindows()
