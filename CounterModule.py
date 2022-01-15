@@ -94,7 +94,7 @@ def curl_counter(goal_curls):
                 pass
             
             cv2.rectangle(image, (440,0), (840,60), (0,0,0), -1)
-            cv2.putText(image, 'BISEP CURLS', (460,25), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(image, 'BISEP CURLS', (460,25), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
 
             # Render curl counter for right hand
             # Setup status box for right hand
@@ -137,16 +137,7 @@ def curl_counter(goal_curls):
                                     )               
                 
             cv2.imshow('CURL COUNTER', image)
-            
-            
-            #Tells is you are standing in range
-            '''if int(shoulder_r[0]) > 0.7:
-                cv2.putText(image, 'MOVE RIGHT', (100,100), cv2.FONT_HERSHEY_COMPLEX_SMALL, 10, (0,0,0), 2, cv2.LINE_AA)
-                print("MOVE RIGHT")
-            if int(shoulder_l[0]) < 0.3:
-                cv2.putText(image, 'MOVE LEFT', (100,100), cv2.FONT_HERSHEY_COMPLEX_SMALL, 10, (0,0,0), 2, cv2.LINE_AA)
-                print("MOVE LEFT")'''
-    
+
             if int(counter) >= int(inputGoal) and int(counter_r) >= int(inputGoal):
                 break
 
@@ -329,7 +320,7 @@ def squat_counter(goal_squat):
                     print("Right : ",counter_r)                            
             except:
                 pass
-             # Render pushup counter for right hand
+            # Render pushup counter for right hand
             # Setup status box for right hand
             cv2.rectangle(image, (0,0), (70,80), (0,0,0), -1)
             # cv2.rectangle(image, (0,35), (220,80), (245,117,16), -1)
@@ -480,6 +471,7 @@ def running_counter(goal_running):
                 break
 
     cv2.destroyAllWindows() 
+
 def posture_detector():
     distance_cal = 1
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
@@ -506,7 +498,7 @@ def posture_detector():
                 
                 distance_cal = (calculate_distance(nose,middleshoulder)*100)
                 print(distance_cal)
-                        
+                
             except:
                 pass
             
@@ -523,12 +515,12 @@ def posture_detector():
                                     mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
                                     mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
                                     )               
-            cv2.imshow('Mediapipe Feed', image)
+            cv2.imshow('Posture Detecti', image)
             
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
-
     cv2.destroyAllWindows() 
+
 def take_rest(timer_count):
     while cap.isOpened():
         TIMER = int(timer_count)

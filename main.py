@@ -6,8 +6,6 @@ import tkinter.font as font
 import time
 from PIL import Image, ImageTk
 
-
-
 root = tk.Tk(className='Main MENU')
 root.geometry("620x1000")
 root.minsize(620,1000)
@@ -24,8 +22,6 @@ workoutFrame.place(height=1000, width=630, x=1000, y=0)
 
 difficultyFrame = tk.Frame(root, bg= "#F5F7FD" )
 difficultyFrame.place(height=1000, width=630, x=1000, y=0)
-
-
 
 def introFrameOpen():
     introFrame.place(x=0,y=0) 
@@ -59,7 +55,6 @@ def easy():
     running_counter(difficulty)
     time.sleep(5)
     squat_counter(1)
-    cap.release()
     homeFrameOpen()
 
 def moderate():
@@ -70,7 +65,6 @@ def moderate():
     running_counter(difficulty)
     time.sleep(5)
     squat_counter(difficulty)
-    cap.release()
     homeFrameOpen()
 
 def hard():
@@ -83,12 +77,10 @@ def hard():
     squat_counter(difficulty)
     time.sleep(5)
     push_up_counter(difficulty)
-    cap.release()
     homeFrameOpen()
 
 def posture_detector_callback():
     posture_detector()
-    cap.release()
     homeFrameOpen()
 
 def counter_time_callback():
