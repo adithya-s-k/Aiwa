@@ -145,11 +145,12 @@ def takerestFrameOpen():
 def easy():
     entry1 = 5
     difficulty = entry1
+    homeFrameOpen()
     curl_counter(difficulty)
     running_counter(difficulty)
-    time.sleep(5)
-    squat_counter(1)
-    homeFrameOpen()
+    toeTouch_counter(difficulty)
+    crunches_counter(difficulty)
+    squat_counter(difficulty)
 
 def moderate():
     entry1 = 10
@@ -178,7 +179,7 @@ def posture_detector_callback():
     homeFrameOpen()
 
 def counter_time_callback():
-    curl_counter(2)
+    crunches_counter(5)
     homeFrameOpen()
 
 #######################################
@@ -227,7 +228,7 @@ startButton.place(x=47 ,y=487)
 buttonHome3 = Image.open("C:\Programming\Aiwa\Assets\page1_4.png")
 buttonHome3 = buttonHome3.resize((525,191), Image.ANTIALIAS)
 buttonHome3 = ImageTk.PhotoImage(buttonHome3)
-startButton = Button(homeFrame,image = buttonHome3 ,command = takerest5 ,borderwidth = 0)
+startButton = Button(homeFrame,image = buttonHome3 ,command = counter_time_callback ,borderwidth = 0)
 startButton.place(x=47 ,y=715)
 
 ################################################################################
