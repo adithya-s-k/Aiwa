@@ -603,7 +603,7 @@ def toeTouch_counter(goal_touches):
                 break
     cv2.destroyAllWindows()
 
-def crunches_counter(goal_crunches):
+def crunches_counter(goal_crunches):    
     back_angle_r = 90
     inputGoal = goal_crunches
     #initializing variables to count repetitions
@@ -664,4 +664,66 @@ def crunches_counter(goal_crunches):
                 break
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
+    cv2.destroyAllWindows()
+
+def calibation_and_measurments():
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+
+            ret, frame = cap.read()
+            # Recolor image to RGB
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) #converting BGR to RGB so that it becomes easier for library to read the image
+            image.flags.writeable = False #this step is done to save some memoery
+            # Make detection
+            results = pose.process(image) #We are using the pose estimation model 
+            # Recolor back to BGR
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            # Extract landmarks
+            try:
+                landmarks = results.pose_landmarks.landmark
+
+                shoulder_ll = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+                shoulder_rl = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+
+                shoulder_l = round(float(shoulder_ll[0]),3)
+                shoulder_r = round(float(shoulder_rl[0]),3)
+
+                #print(shoulder_l,shoulder_r)
+            except:
+                pass
+            
+            distance_points = calculate_distance(shoulder_rl,shoulder_ll)
+            W = 6.0
+            '''print("Distance",w)
+            # Finding the Focal Length
+            d = 80
+            f = (w*d)/W
+            print("Focal Length :",f)'''
+            # the values of W and f are for my camera only
+            focal_length = 6.6
+            depth = (W * focal_length) / distance_points
+            print("DISTANCE :",depth )
+
+
+            cv2.rectangle(image, (0,0), (550,60), (0,0,0), -1)
+            cv2.putText(image, str(depth) , (20,45), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
+            cv2.rectangle(image, (730,960-60), (1280,960), (0,0,0), -1)
+            cv2.rectangle(image, (0,960-60), (550,960), (0,0,0), -1)
+            cv2.putText(image, str(shoulder_l) , (20,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
+            cv2.putText(image, str(shoulder_r), (750,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0,255,255), 2, cv2.LINE_AA)
+            # cv2.putText(image, 'GOOD JOB', (540,960-60), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,0), 2, cv2.LINE_AA)
+
+            # Render detections
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    )               
+            
+
+            cv2.imshow('CALIBRATOR', image)
+
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
+
     cv2.destroyAllWindows()
