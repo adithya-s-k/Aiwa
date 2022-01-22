@@ -179,7 +179,7 @@ def posture_detector_callback():
     homeFrameOpen()
 
 def counter_time_callback():
-    jump_counter(10)
+    take_rest()
     homeFrameOpen()
 
 #######################################

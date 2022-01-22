@@ -7,7 +7,7 @@ import time
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(3,1280)
 cap.set(4,960)
 
@@ -527,14 +527,42 @@ def posture_detector():
                 break
     cv2.destroyAllWindows() 
 
-def take_rest(timer_count):
-    while cap.isOpened():
-        TIMER = int(timer_count)
-        while TIMER > 0:
-            time.sleep(1)
-            TIMER -= 1
-            print(TIMER)
+def take_rest():
+    timer = 0
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+            ret, frame = cap.read()
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
+            results = pose.process(image)
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            timer += 1
+            cv2.rectangle(image, (0,0), (1280,60), (0,0,0), -1)
+            cv2.putText(image, 'PROGRAM CALIBRATING => STAT SIT UP STRAIGHT', (20,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+            unitTime = 6
+            cv2.rectangle(image, (0,0), (1280,70), (0,0,0), -1)
+            if timer <= unitTime:
+                cv2.putText(image, str(5), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+            elif timer <= unitTime*2:
+                cv2.putText(image, str(4), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+            elif timer <= unitTime*3:
+                cv2.putText(image, str(3), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+            elif timer <= unitTime*4:
+                cv2.putText(image, str(2), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+            elif timer <= unitTime*5:
+                cv2.putText(image, str(1), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
 
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    )               
+            cv2.imshow('Timer', image)
+
+            if timer >= unitTime*6:
+                break
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
     cv2.destroyAllWindows()
 
 def toeTouch_counter(goal_touches):
@@ -1075,7 +1103,7 @@ def posture_detector_advanced():
             cv2.rectangle(image, (380,0), (840,60), (0,0,0), -1)
             cv2.putText(image, 'POSTURE DETECTION', (400,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
 
-            cv2.rectangle(image, (0,0), (150,70), (0,0,0), -1)
+            cv2.rectangle(image, (0,0), (200,70), (0,0,0), -1)
             cv2.putText(image, str(round(distance_cal,2)), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
             
             cv2.rectangle(image, (630,960-60), (1280,960), (0,0,0), -1)
