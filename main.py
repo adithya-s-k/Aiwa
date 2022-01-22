@@ -175,7 +175,7 @@ def hard():
     homeFrameOpen()
 
 def posture_detector_callback():
-    posture_detector()
+    posture_detector_advanced()
     homeFrameOpen()
 
 def counter_time_callback():
