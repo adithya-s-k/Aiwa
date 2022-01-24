@@ -538,20 +538,19 @@ def take_rest():
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             timer += 1
-            cv2.rectangle(image, (0,0), (1280,60), (0,0,0), -1)
-            cv2.putText(image, 'PROGRAM CALIBRATING => STAT SIT UP STRAIGHT', (20,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+            # cv2.rectangle(image, (0,0), (1280,60), (0,0,0), -1)
+            cv2.putText(image, 'TAKE REST FOR', (200,200), cv2.FONT_HERSHEY_COMPLEX_SMALL, 4, (255, 225, 0), 7, cv2.LINE_AA)
             unitTime = 6
-            cv2.rectangle(image, (0,0), (1280,70), (0,0,0), -1)
             if timer <= unitTime:
-                cv2.putText(image, str(5), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+                cv2.putText(image, str(5), (580,450), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 225, 0), 20, cv2.LINE_AA)
             elif timer <= unitTime*2:
-                cv2.putText(image, str(4), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+                cv2.putText(image, str(4), (580,450), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 225, 0), 20, cv2.LINE_AA)
             elif timer <= unitTime*3:
-                cv2.putText(image, str(3), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+                cv2.putText(image, str(3), (580,450), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 225, 0), 20, cv2.LINE_AA)
             elif timer <= unitTime*4:
-                cv2.putText(image, str(2), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+                cv2.putText(image, str(2), (580,450), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 225, 0), 20, cv2.LINE_AA)
             elif timer <= unitTime*5:
-                cv2.putText(image, str(1), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+                cv2.putText(image, str(1), (580,450), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 225, 0), 20, cv2.LINE_AA)
 
             mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
                                     mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
