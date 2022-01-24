@@ -3,6 +3,9 @@ import mediapipe as mp
 import numpy as np
 import math
 import time
+import cvzone
+from cvzone.FaceMeshModule import FaceMeshDetector
+from cvzone.PlotModule import LivePlot
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -1081,9 +1084,12 @@ def posture_detector_advanced():
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
             ret, frame = cap.read()
+            
             image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             image.flags.writeable = False
+
             results = pose.process(image)
+
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             try:
@@ -1120,3 +1126,63 @@ def posture_detector_advanced():
                 break
 
     cv2.destroyAllWindows() 
+
+def blink_detctor():
+    detector = FaceMeshDetector(maxFaces=1)
+
+    idList = [22, 23, 24, 26, 110, 157, 158, 159, 160, 161, 130, 243]
+    ratioList = []
+    blinkCounter = 0
+    counter = 0
+    color = (255, 0, 255)
+
+    while True:
+
+        if cap.get(cv2.CAP_PROP_POS_FRAMES) == cap.get(cv2.CAP_PROP_FRAME_COUNT):
+            cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+
+        success, img = cap.read()
+        img, faces = detector.findFaceMesh(img, draw=False)
+
+        if faces:
+            face = faces[0]
+            for id in idList:
+                cv2.circle(img, face[id], 3,color, cv2.FILLED)
+
+            leftUp = face[159]
+            leftDown = face[23]
+            leftLeft = face[130]
+            leftRight = face[243]
+            lenghtVer, _ = detector.findDistance(leftUp, leftDown)
+            lenghtHor, _ = detector.findDistance(leftLeft, leftRight)
+
+            # cv2.line(img, leftUp, leftDown, (0, 200, 0), 3)
+            # cv2.line(img, leftLeft, leftRight, (0, 200, 0), 3)
+
+            ratio = int((lenghtVer / lenghtHor) * 100)
+            ratioList.append(ratio)
+            if len(ratioList) > 3:
+                ratioList.pop(0)
+            ratioAvg = sum(ratioList) / len(ratioList)
+
+            if ratioAvg < 40 and counter == 0:
+                blinkCounter += 1
+                color = (0,200,0)
+                counter = 1
+            if counter != 0:
+                counter += 1
+                if counter > 10:
+                    counter = 0
+                    color = (255,0, 255)
+
+            cvzone.putTextRect(img, f'Blink Count: {blinkCounter}', (50, 100),
+                                colorR=color)
+
+
+        cv2.imshow("Image", img)
+        cv2.waitKey(25)
+
+        if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
+
+    cv2.destroyAllWindows()
