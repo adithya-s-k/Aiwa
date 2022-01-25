@@ -166,8 +166,6 @@ def moderate():
     take_rest()
     tricep_counter(difficulty)
     take_rest()
-    push_up_counter(difficulty)
-    take_rest()
     homeFrameOpen()
 
 def hard():
@@ -180,7 +178,7 @@ def hard():
     homeFrameOpen()
 
 def posture_detector_callback():
-    posture_detector_advanced()
+    posture_detector_advanced_u()
     homeFrameOpen()
 
 def counter_time_callback():

@@ -1038,7 +1038,8 @@ def posture_detector_advanced():
 
     timer = 0
     distance_cal = 0
-    distancePoints = []
+    distancePoints = 0
+    
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
             ret, frame = cap.read()
@@ -1099,7 +1100,7 @@ def posture_detector_advanced():
                                     )               
             cv2.imshow('Posture Detection adv', image)
 
-            if timer >= 18:
+            if timer >= 10:
                 break
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
@@ -1194,6 +1195,7 @@ def posture_detector_advanced():
     cv2.destroyAllWindows()
 
 def game_detection():
+
     time.sleep(2)
     stage = None
     basepoints = 0
@@ -1201,6 +1203,7 @@ def game_detection():
     # Curl counter variables
     counter = 0 
     counter_sit = 0
+    hip_cord_l = []
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
             ret, frame = cap.read()
@@ -1332,6 +1335,172 @@ def game_detection():
                                     )               
             
             cv2.imshow('JUMP COUNTER', image)
+
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
+
+    cv2.destroyAllWindows()
+
+def posture_detector_advanced_u():
+    detector = FaceMeshDetector(maxFaces=1)
+
+    idList = [22, 23, 24, 26, 110, 157, 158, 159, 160, 161, 130, 243]
+    ratioList = []
+    blinkCounter = 0
+    counter = 0
+    color = (255, 0, 255)
+
+    timer = 0
+    distance_cal = 0
+    distancePoints = []
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+            ret, frame = cap.read()
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
+            results = pose.process(image)
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            timer += 1
+            cv2.rectangle(image, (0,0), (1280,60), (0,0,0), -1)
+            cv2.putText(image, 'PROGRAM CALIBRATING => STAT SIT UP STRAIGHT', (20,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    )               
+            cv2.imshow('Posture Detection adv', image)
+
+            if timer >= 15:
+                break
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
+
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+            ret, frame = cap.read()
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
+            results = pose.process(image)
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            try:
+                landmarks = results.pose_landmarks.landmark
+                nose = [landmarks[mp_pose.PoseLandmark.NOSE.value].x,landmarks[mp_pose.PoseLandmark.NOSE.value].y]
+                # hand_r = [landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].y]
+                rightshoulder = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+                leftshoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+                midshoulder = [((rightshoulder[0] + leftshoulder[0])/2),((rightshoulder[1] + leftshoulder[1])/2)]
+                middleshoulder = [landmarks[mp_pose.PoseLandmark.NOSE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+
+                distance_cal = (calculate_distance(nose,middleshoulder)*100)
+                
+                distancePoints.append(distance_cal)
+
+            except:
+                pass
+            
+            timer += 1
+            
+            cv2.rectangle(image, (320,0), (940,60), (0,0,0), -1)
+            cv2.putText(image, 'POSTURE CALIBRATION', (340,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+
+            cv2.rectangle(image, (0,0), (1280,70), (0,0,0), -1)
+            cv2.putText(image, str(distance_cal), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+            
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    )               
+            cv2.imshow('Posture Detection adv', image)
+
+            if timer >= 18:
+                break
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
+
+    maxDistance = max(distancePoints)
+    
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+            ret, frame = cap.read()
+
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
+
+            results = pose.process(image)
+
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            try:
+                landmarks = results.pose_landmarks.landmark
+                nose = [landmarks[mp_pose.PoseLandmark.NOSE.value].x,landmarks[mp_pose.PoseLandmark.NOSE.value].y]
+                # hand_r = [landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].y]
+                rightshoulder = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+                leftshoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+                midshoulder = [((rightshoulder[0] + leftshoulder[0])/2),((rightshoulder[1] + leftshoulder[1])/2)]
+                middleshoulder = [landmarks[mp_pose.PoseLandmark.NOSE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+                
+                distance_cal = (calculate_distance(nose,middleshoulder)*100)
+                print(distance_cal)
+            except:
+                pass
+
+            if cap.get(cv2.CAP_PROP_POS_FRAMES) == cap.get(cv2.CAP_PROP_FRAME_COUNT):
+                cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+
+            success, img = cap.read()
+            img, faces = detector.findFaceMesh(img, draw=False)
+
+            if faces:
+                face = faces[0]
+                for id in idList:
+                    cv2.circle(img, face[id], 3,color, cv2.FILLED)
+
+                leftUp = face[159]
+                leftDown = face[23]
+                leftLeft = face[130]
+                leftRight = face[243]
+                lenghtVer, _ = detector.findDistance(leftUp, leftDown)
+                lenghtHor, _ = detector.findDistance(leftLeft, leftRight)
+
+                # cv2.line(img, leftUp, leftDown, (0, 200, 0), 3)
+                # cv2.line(img, leftLeft, leftRight, (0, 200, 0), 3)
+
+                ratio = int((lenghtVer / lenghtHor) * 100)
+                ratioList.append(ratio)
+                if len(ratioList) > 3:
+                    ratioList.pop(0)
+                ratioAvg = sum(ratioList) / len(ratioList)
+
+                if ratioAvg < 40 and counter == 0:
+                    blinkCounter += 1
+                    color = (0,200,0)
+                    counter = 1
+                if counter != 0:
+                    counter += 1
+                    if counter > 10:
+                        counter = 0
+                        color = (255,0, 255)
+
+            cvzone.putTextRect(image, f'Blink Count: {blinkCounter}', (50, 100),
+                                    colorR=color)
+
+            cv2.rectangle(image, (380,0), (840,60), (0,0,0), -1)
+            cv2.putText(image, 'POSTURE DETECTION', (400,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+
+            cv2.rectangle(image, (0,0), (200,70), (0,0,0), -1)
+            cv2.putText(image, str(round(distance_cal,2)), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+            
+            cv2.rectangle(image, (630,960-60), (1280,960), (0,0,0), -1)
+            if distance_cal < ((maxDistance)*0.8):
+                cv2.putText(image, "YOUR ARE CROUCHING", (650,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
+            else:
+                cv2.putText(image,"YOUR ARE UP STRAIGHT", (650,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    )               
+            cv2.imshow('Posture Detection adv', image)
 
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
