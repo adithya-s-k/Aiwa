@@ -5,6 +5,8 @@ import tkinter.ttk as ttk
 import tkinter.font as font
 import time
 from PIL import Image, ImageTk
+from game import*
+from threading import Thread
 
 root = tk.Tk(className='Main MENU')
 root.geometry("620x1000")
@@ -179,8 +181,10 @@ def posture_detector_callback():
     homeFrameOpen()
 
 def counter_time_callback():
-    game_detection()
-    homeFrameOpen()
+    if __name__ == '__main__':
+        Thread(target = Zenitsu_Run).start()
+        Thread(target = game_detection).start()
+
 
 #######################################
 # Sign in frame
