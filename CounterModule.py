@@ -6,6 +6,7 @@ import time
 import cvzone
 from cvzone.FaceMeshModule import FaceMeshDetector
 from cvzone.PlotModule import LivePlot
+import pyautogui
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -1039,7 +1040,7 @@ def posture_detector_advanced():
                                     )               
             cv2.imshow('Posture Detection adv', image)
 
-            if timer >= 15:
+            if timer >= 20:
                 break
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
@@ -1151,10 +1152,10 @@ def posture_detector_advanced():
                         counter = 0
                         color = (255,0, 255)
 
-            cvzone.putTextRect(image, f'Blink Count: {blinkCounter}', (50, 100),
+            cvzone.putTextRect(image, f'Blink Count: {blinkCounter}', (100, 100),
                                     colorR=color)
 
-            cv2.rectangle(image, (380,0), (840,60), (0,0,0), -1)
+            cv2.rectangle(image, (380,0), (900,60), (0,0,0), -1)
             cv2.putText(image, 'POSTURE DETECTION', (400,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
 
             cv2.rectangle(image, (0,0), (200,70), (0,0,0), -1)
@@ -1174,64 +1175,149 @@ def posture_detector_advanced():
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
 
-    cv2.destroyAllWindows() 
+    cv2.destroyAllWindows()
 
-def blink_detctor():
-    detector = FaceMeshDetector(maxFaces=1)
+def game_detection():
+    time.sleep(2)
+    stage = None
+    basepoints = 0
+    basePointList = []
+    # Curl counter variables
+    counter = 0 
+    counter_sit = 0
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+            ret, frame = cap.read()
+            # Recolor image to RGB
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) #converting BGR to RGB so that it becomes easier for library to read the image
+            image.flags.writeable = False #this step is done to save some memoery
+            # Make detection
+            results = pose.process(image) #We are using the pose estimation model 
+            # Recolor back to BGR
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            # Extract landmarks
+            try:
+                landmarks = results.pose_landmarks.landmark
+                # Get coordinates
+                shoulder_l = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+                wrist_l = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
+                hip_l = [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y]
+                hip_cord_l = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y
+                # Calculate angle
+                shoulder_angle = calculate_angle(hip_l,shoulder_l,wrist_l)
+                
+                # Get coordinates of right hand
+                shoulder_r = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+                wrist_r = [landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].y]
+                hip_r = [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y]
+                hip_cord_r = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y
+                # Calculate angle
+                shoulder_angle_r = calculate_angle(hip_r,shoulder_r,wrist_r)
+                
+            except:
+                pass
+            cv2.rectangle(image, (320,0), (840,60), (0,0,0), -1)
+            cv2.putText(image, 'JUMP 2 to 3 times', (340,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
 
-    idList = [22, 23, 24, 26, 110, 157, 158, 159, 160, 161, 130, 243]
-    ratioList = []
-    blinkCounter = 0
-    counter = 0
-    color = (255, 0, 255)
+            cv2.rectangle(image, (730,960-60), (1280,960), (0,0,0), -1)
+            cv2.putText(image, str(hip_cord_l), (750,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
+            basePointList.append(hip_cord_l)
+            # Render detections
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    )               
+            
+            cv2.imshow('JUMP CALIBRATOR', image)
+            if shoulder_angle > 90 and shoulder_angle_r > 90:
+                basepoints = ((hip_cord_r + hip_cord_l)/2)
+                break
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
+        cv2.destroyAllWindows()
 
-    while True:
+    jumpPoint = min(basePointList)
+    print("Jump height : ", jumpPoint )
+    print("Base Point : ", basepoints)
+    sitPoint = basepoints*1.11
+    time.sleep(3)
 
-        if cap.get(cv2.CAP_PROP_POS_FRAMES) == cap.get(cv2.CAP_PROP_FRAME_COUNT):
-            cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-
-        success, img = cap.read()
-        img, faces = detector.findFaceMesh(img, draw=False)
-
-        if faces:
-            face = faces[0]
-            for id in idList:
-                cv2.circle(img, face[id], 3,color, cv2.FILLED)
-
-            leftUp = face[159]
-            leftDown = face[23]
-            leftLeft = face[130]
-            leftRight = face[243]
-            lenghtVer, _ = detector.findDistance(leftUp, leftDown)
-            lenghtHor, _ = detector.findDistance(leftLeft, leftRight)
-
-            # cv2.line(img, leftUp, leftDown, (0, 200, 0), 3)
-            # cv2.line(img, leftLeft, leftRight, (0, 200, 0), 3)
-
-            ratio = int((lenghtVer / lenghtHor) * 100)
-            ratioList.append(ratio)
-            if len(ratioList) > 3:
-                ratioList.pop(0)
-            ratioAvg = sum(ratioList) / len(ratioList)
-
-            if ratioAvg < 40 and counter == 0:
-                blinkCounter += 1
-                color = (0,200,0)
-                counter = 1
-            if counter != 0:
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+            ret, frame = cap.read()
+            # Recolor image to RGB
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) #converting BGR to RGB so that it becomes easier for library to read the image
+            image.flags.writeable = False #this step is done to save some memoery
+            # Make detection
+            results = pose.process(image) #We are using the pose estimation model 
+            # Recolor back to BGR
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            # Extract landmarks
+            try:
+                landmarks = results.pose_landmarks.landmark
+                # Get coordinates
+                hip_l = [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y]
+                hip_cord_l = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y
+                # Calculate angle
+                shoulder_angle = calculate_angle(hip_l,shoulder_l,wrist_l)
+                
+                # Get coordinates of right hand
+                hip_r = [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y]
+                hip_cord_r = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y
+                # Calculate angle
+                shoulder_angle_r = calculate_angle(hip_r,shoulder_r,wrist_r)
+                
+            except:
+                pass
+            
+            if hip_cord_l < jumpPoint:
+                stage = "Jump"
+            if hip_cord_l > jumpPoint and stage =='Jump':
+                stage="Stand"
                 counter += 1
-                if counter > 10:
-                    counter = 0
-                    color = (255,0, 255)
+            if hip_cord_l > sitPoint:
+                stage = "Sit"
+            if hip_cord_l < sitPoint and stage == "Sit":
+                stage ="Stand"
+                counter_sit += 1
+            
+            if stage == "Jump":
+                pyautogui.press('up')
+                print("UP")
+            if stage == "Sit":
+                pyautogui.press('down')
+                print("DOWN")
 
-            cvzone.putTextRect(img, f'Blink Count: {blinkCounter}', (50, 100),
-                                colorR=color)
+            cv2.rectangle(image, (440,0), (840,60), (0,0,0), -1)
+            cv2.putText(image, 'GAME COUNTER', (460,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+            
+            cv2.line(image, (0,int(960*jumpPoint)), (1280,int(960*jumpPoint)), (0, 255, 0), 3)
+            cv2.line(image, (0,int(960*basepoints)), (1280,int(960*basepoints)), (0, 0, 255), 3)
+            cv2.line(image, (0,int(960*sitPoint)), (1280,int(960*sitPoint)), (0, 0, 255), 3)
 
+            cv2.rectangle(image, (0,0), (100,70), (0,0,0), -1)
+            cv2.putText(image, str(counter), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
 
-        cv2.imshow("Image", img)
-        cv2.waitKey(25)
+            cv2.rectangle(image, (1180,0), (1280,70), (0,0,0), -1)
+            cv2.putText(image, str(counter_sit), (1190,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
 
-        if cv2.waitKey(10) & 0xFF == ord('q'):
+            cv2.rectangle(image, (730,960-60), (1280,960), (0,0,0), -1)
+            cv2.putText(image, str(landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y), (750,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
+            
+            cv2.rectangle(image, (730,960-60), (1280,960), (0,0,0), -1)
+            cv2.putText(image, str(hip_cord_l), (750,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
+            
+            # Render detections
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
+                                    )               
+            
+            cv2.imshow('JUMP COUNTER', image)
+
+            if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
 
     cv2.destroyAllWindows()
