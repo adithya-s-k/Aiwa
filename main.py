@@ -148,31 +148,34 @@ def easy():
     entry1 = 3
     difficulty = entry1
     homeFrameOpen()
-    curl_counter(difficulty)
     running_counter(difficulty)
+    take_rest()
     toeTouch_counter(difficulty)
+    take_rest()
+    jump_counter(5)
+    take_rest()
     crunches_counter(difficulty)
-    squat_counter(difficulty)
+    homeFrameOpen()
 
 def moderate():
-    entry1 = 10
+    entry1 = 3
     difficulty = entry1  
     curl_counter(difficulty)
-    time.sleep(5)
-    running_counter(difficulty)
-    time.sleep(5)
+    take_rest()
     squat_counter(difficulty)
+    take_rest()
+    tricep_counter(difficulty)
+    take_rest()
+    push_up_counter(difficulty)
+    take_rest()
     homeFrameOpen()
 
 def hard():
     entry1 = 15
     difficulty = entry1  
     curl_counter(difficulty)
-    time.sleep(5)
     running_counter(difficulty)
-    time.sleep(5)
     squat_counter(difficulty)
-    time.sleep(5)
     push_up_counter(difficulty)
     homeFrameOpen()
 
@@ -281,7 +284,7 @@ startButton.place(x=47 ,y=259)
 buttonDifficulty2 = Image.open("Assets\page3_3.png")
 buttonDifficulty2 = buttonDifficulty2.resize((525,191), Image.ANTIALIAS)
 buttonDifficulty2 = ImageTk.PhotoImage(buttonDifficulty2)
-startButton = Button(difficultyFrame,image = buttonDifficulty2 ,command = takerest5 ,borderwidth = 0)
+startButton = Button(difficultyFrame,image = buttonDifficulty2 ,command = moderate ,borderwidth = 0)
 startButton.place(x=47 ,y=487)
 
 buttonDifficulty3 = Image.open("Assets\page3_4.png")

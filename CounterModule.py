@@ -7,6 +7,17 @@ import cvzone
 from cvzone.FaceMeshModule import FaceMeshDetector
 from cvzone.PlotModule import LivePlot
 import pyautogui
+import pyttsx3
+
+text_speech=pyttsx3.init()
+rate=text_speech.setProperty("rate",120)
+#volume=text_speech.setProperty("volume",0.5)#max=1,min=0
+voices=text_speech.getProperty("voices")
+voices=text_speech.setProperty("voice", voices[1].id)#male=0,female=1
+
+readSpeech = ""
+text_speech.say(readSpeech)
+text_speech.runAndWait()
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -38,6 +49,7 @@ def calculate_distance(a,b):
     return distance
 
 def curl_counter(goal_curls):
+    global readSpeech
     inputGoal = goal_curls
     # Curl counter variables
     counter = 0 
@@ -128,8 +140,12 @@ def curl_counter(goal_curls):
             cv2.rectangle(image, (730,960-60), (1280,960), (0,0,0), -1)
             if counter > counter_r:
                 cv2.putText(image, 'Do Left arm next', (750,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
+                readSpeech = "left arm"
+                text_speech.runAndWait()
             elif counter_r > counter:
                 cv2.putText(image, 'Do Right arm next', (750,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
+                readSpeech = "right arm"
+                text_speech.runAndWait()
             elif counter == inputGoal and counter_r == inputGoal:
                 cv2.putText(image, 'GOOD JOB', (540,960-60), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,0), 2, cv2.LINE_AA)
                 
@@ -1033,7 +1049,7 @@ def posture_detector_advanced():
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             timer += 1
             cv2.rectangle(image, (0,0), (1280,60), (0,0,0), -1)
-            cv2.putText(image, 'PROGRAM CALIBRATING => STAT SIT UP STRAIGHT', (20,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(image, 'CALIBRATING ========> SIT UP STRAIGHT', (20,40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 1, cv2.LINE_AA)
             mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
                                     mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
                                     mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
@@ -1162,7 +1178,7 @@ def posture_detector_advanced():
             cv2.putText(image, str(round(distance_cal,2)), (10,60), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
             
             cv2.rectangle(image, (630,960-60), (1280,960), (0,0,0), -1)
-            if distance_cal < ((maxDistance)*0.8):
+            if distance_cal < ((maxDistance)*0.85):
                 cv2.putText(image, "YOUR ARE CROUCHING", (650,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
             else:
                 cv2.putText(image,"YOUR ARE UP STRAIGHT", (650,960-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,255), 2, cv2.LINE_AA)
@@ -1240,7 +1256,7 @@ def game_detection():
     jumpPoint = min(basePointList)
     print("Jump height : ", jumpPoint )
     print("Base Point : ", basepoints)
-    sitPoint = basepoints*1.11
+    sitPoint = basepoints*1.03
     time.sleep(3)
 
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
