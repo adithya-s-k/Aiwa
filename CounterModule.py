@@ -580,7 +580,7 @@ def take_rest():
 
             if timer >= unitTime*6:
                 break
-            if cv2.waitKey(10) & 0xFF == ord('q'):
+            if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
     cv2.destroyAllWindows()
 
