@@ -1,3 +1,4 @@
+[![videolink](https://github.com/adithya-s-k/AIWA-Web/blob/master/assets/youtube_banner.png)](https://youtu.be/GDy-AMGFmwc)
 ### ABOUT AIWA
 
 - It is a AI based virtual workout assitant. Which will help you in your workout sessions.
